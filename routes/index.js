@@ -56,28 +56,32 @@ app.post('/notes', (req, res) => {
 
 app.delete('/notes/:id', (req, res) => {
 
-    let { id } = req.params;
-    const notes = require('../db/db.json');
+    const { id } = req.params;
+    // Promisfy readFile 
+    readFromFile('./db/db.json').then((data) => {
+        
+        const currentNote = JSON.parse(data);
 
-    if (id) {
-        let matchingNote = notes.find(note => note.id === id);
-        if(matchingNote) {
+        if (id) {
+            var matchingNote = currentNote.find(note => note.id === id);
             
-            let arrayNote = notes.filter(note => {
-                if (note.id !== id) {
-                    return true
-                } else {
-                    return false
-                }
-            })
-
-            writeToFile( './db/db.json', arrayNote);
-
-            res.json(`Note deleted`);
-        } else {
-            res.json('Note ID not found')
+            if(matchingNote) {
+                var arrayNote = currentNote.filter(note => {
+                    if (note.id !== id) {
+                        return true
+                    } else {
+                        return false
+                    }
+                });
+                writeToFile( './db/db.json', arrayNote);
+                res.json(`Note deleted`);
+            } else {
+                res.json('Note ID not found')
+            }
         }
-    }
+    
+    });
+    
 });
 
 module.exports = app;
