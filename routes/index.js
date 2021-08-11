@@ -9,7 +9,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-
+// functions for FS readFile and writeFile
 const readFromFile = util.promisify(fs.readFile);
 
 const writeToFile = (destination, content) =>
@@ -29,11 +29,10 @@ const readAndAppend = (content, file) => {
     });
 };
 
+
+//          /api routes
 app.get('/notes', (req, res) => {
-
-    console.info(`${req.method} request received for notes`);
     readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)));
-
 });
 
 app.post('/notes', (req, res) => {
@@ -44,7 +43,7 @@ app.post('/notes', (req, res) => {
         const newNote = {
             title,
             text,
-            id: uuidv4()
+            id: uuidv4()            // Creates a unique ID for each note
         };
 
         readAndAppend(newNote, './db/db.json');
