@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const util = require('util');
 // const db = require('./db/db.json');
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -48,8 +49,23 @@ app.get('/api/notes', (req, res) => {
 
 });
 
+app.get('/api/notes/:id', (req, res) => {
+
+    const { id } = req.params;
+    console.log(id);
+    const notes = require('./db/db.json');
+
+    if (id) {
+        const matchingNote = notes.find(note => note.id === id);
+        if(matchingNote) {
+            res.send(matchingNote);
+        } else {
+            res.json('Note ID not found')
+        }
+    }
+});
+
 app.post('/api/notes', (req, res) => {
-    console.log("hello");
     const { title, text } = req.body;
 
     if (req.body) {
@@ -57,13 +73,23 @@ app.post('/api/notes', (req, res) => {
         const newNote = {
             title,
             text,
+            id: uuidv4()
         };
 
         readAndAppend(newNote, './db/db.json');
-        res.json('Note added');
+        res.json(`Note added. ID: ${newNote.id}`);
     } else {
         res.error('Error in adding note');
     }
+
+});
+
+
+
+app.delete('/api/notes', (req, res) => {
+    console.log("delete");
+
+    
 
 });
 
