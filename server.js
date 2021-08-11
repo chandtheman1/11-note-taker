@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const util = require('util');
-// const db = require('./db/db.json');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
@@ -40,8 +39,6 @@ app.delete('/api/notes/:id', (req, res) => {
     if (id) {
         const matchingNote = notes.find(note => note.id === id);
         if(matchingNote) {
-            // res.send(matchingNote);
-            // res.send(notes);
             
             const arrayNote = notes.filter(note => {
                 if (note.id !== id) {
@@ -51,14 +48,8 @@ app.delete('/api/notes/:id', (req, res) => {
                 }
             })
 
-            // fs.readFile('./db/db.json', 'utf8', (err, data) => {
-            //     if (err) {
-            //         console.error(err);
-            //     } else {
+            writeToFile( './db/db.json', arrayNote);
 
-            //     }
-            // })
-            
             res.json(`Note deleted`);
         } else {
             res.json('Note ID not found')
