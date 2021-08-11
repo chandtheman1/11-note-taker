@@ -32,6 +32,41 @@ const readAndAppend = (content, file) => {
     });
 };
 
+app.delete('/api/notes/:id', (req, res) => {
+
+    const { id } = req.params;
+    const notes = require('./db/db.json');
+
+    if (id) {
+        const matchingNote = notes.find(note => note.id === id);
+        if(matchingNote) {
+            // res.send(matchingNote);
+            // res.send(notes);
+            
+            const arrayNote = notes.filter(note => {
+                if (note.id !== id) {
+                    return true
+                } else {
+                    return false
+                }
+            })
+
+            // fs.readFile('./db/db.json', 'utf8', (err, data) => {
+            //     if (err) {
+            //         console.error(err);
+            //     } else {
+
+            //     }
+            // })
+            
+            res.json(`Note deleted`);
+        } else {
+            res.json('Note ID not found')
+        }
+    }
+});
+
+
 
 //GET routes
 app.get('/', (req, res) => {
@@ -49,21 +84,7 @@ app.get('/api/notes', (req, res) => {
 
 });
 
-app.get('/api/notes/:id', (req, res) => {
 
-    const { id } = req.params;
-    console.log(id);
-    const notes = require('./db/db.json');
-
-    if (id) {
-        const matchingNote = notes.find(note => note.id === id);
-        if(matchingNote) {
-            res.send(matchingNote);
-        } else {
-            res.json('Note ID not found')
-        }
-    }
-});
 
 app.post('/api/notes', (req, res) => {
     const { title, text } = req.body;
@@ -84,14 +105,6 @@ app.post('/api/notes', (req, res) => {
 
 });
 
-
-
-app.delete('/api/notes', (req, res) => {
-    console.log("delete");
-
-    
-
-});
 
 
 //wildcard route
