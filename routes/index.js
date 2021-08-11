@@ -56,14 +56,14 @@ app.post('/notes', (req, res) => {
 
 app.delete('/notes/:id', (req, res) => {
 
-    const { id } = req.params;
+    let { id } = req.params;
     const notes = require('../db/db.json');
 
     if (id) {
-        const matchingNote = notes.find(note => note.id === id);
+        let matchingNote = notes.find(note => note.id === id);
         if(matchingNote) {
             
-            const arrayNote = notes.filter(note => {
+            let arrayNote = notes.filter(note => {
                 if (note.id !== id) {
                     return true
                 } else {
